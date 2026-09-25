@@ -1,0 +1,9 @@
+id: local.classisland.timedshutdown
+name: 定时关机
+description: TimeShutdown - 一款 ClassIsland 插件，为电教员 / 老师提供方便。通过设置时间和循环次数实现定时关机，方便下课、放学后自动关机。本插件全部代码均由 AI 编写生成，作者仅负责需求设计 / 测试 / 发布与图标设计，使用前请自行评估代码质量与安全性。
+entranceAssembly: "ClassIsland.TimedShutdown.dll"
+apiVersion: 2.0.0.0
+version: 1.0.0.0
+author: OpenCode
+icon: icon.png
+readme: README.md

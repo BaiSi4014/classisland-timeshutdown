@@ -1,0 +1,232 @@
+<ci:SettingsPageBase x:Class="ClassIsland.TimedShutdown.Views.SettingsPages.TimedShutdownSettingsPage"
+                      xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:ci="http://classisland.tech/schemas/xaml/core"
+                      mc:Ignorable="d">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24"
+                    MaxWidth="980"
+                    Spacing="12">
+            <TextBlock Text="定时关机"
+                       FontSize="24"
+                       FontWeight="SemiBold" />
+            <TextBlock Text="使用 ClassIsland 的时间服务安排关机任务。时间采用 24 小时制，任务循环、编辑、删除和启停都会自动保存。"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="TimeShutdown - 一款 ClassIsland 插件，为电教员 / 老师提供方便。"
+                       FontSize="14"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="通过设置时间和循环次数进行定时关机，方便下课、放学后自动关机。"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="图标设计：哔哩哔哩 白汐BaiSi；图标中人物为原创 OC，版权归 白汐BaiSi 所有。本插件全部代码均由 AI 编写生成，作者仅负责需求设计 / 测试 / 发布与图标设计，使用前请自行评估代码质量与安全性。"
+                       Foreground="#FFD05A5A"
+                       TextWrapping="Wrap" />
+
+            <Border Padding="14"
+                    BorderBrush="#33808080"
+                    BorderThickness="1"
+                    CornerRadius="6">
+                <StackPanel Spacing="6">
+                    <TextBlock x:Name="CisTimeText"
+                               Text="ClassIsland 时间：—"
+                               FontSize="16"
+                               FontWeight="SemiBold" />
+                    <TextBlock x:Name="SyncStatusText"
+                               Text="时间同步状态：—"
+                               TextWrapping="Wrap" />
+                    <TextBlock x:Name="NextRunText"
+                               Text="最近一次计划执行：—"
+                               TextWrapping="Wrap" />
+                    <TextBlock x:Name="StatusText"
+                               Text="调度状态：等待中"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <Button x:Name="AddTaskButton"
+                    Content="新增定时关机任务"
+                    HorizontalAlignment="Left"
+                    Click="OnAddTaskClick" />
+
+            <Border x:Name="EditorBorder"
+                    Padding="14"
+                    IsVisible="False"
+                    BorderBrush="#55808080"
+                    BorderThickness="1"
+                    CornerRadius="6">
+                <StackPanel Spacing="10">
+                    <TextBlock x:Name="EditorTitleText"
+                               Text="新增任务"
+                               FontSize="18"
+                               FontWeight="SemiBold" />
+
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="任务名称"
+                                   Width="100"
+                                   VerticalAlignment="Center" />
+                        <TextBox x:Name="NameTextBox"
+                                 Width="360"
+                                 Watermark="例如：工作日晚上关机" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="关机时间（当天）"
+                                   Width="100"
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="HourComboBox"
+                                  Width="70" />
+                        <TextBlock Text="时"
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="MinuteComboBox"
+                                  Width="70" />
+                        <TextBlock Text="分"
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="SecondComboBox"
+                                  Width="70" />
+                        <TextBlock Text="秒"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Text="选择时、分、秒即可，不需要输入冒号。"
+                                   Foreground="#55808080"
+                                   VerticalAlignment="Center"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                    <TextBlock Text="仅一次任务默认从创建当天算起；时间已过会自动顺延到明天。时间精确到秒。"
+                               Margin="110,0,0,0"
+                               Foreground="#55808080"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="循环方式"
+                                   Width="100"
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="RepeatComboBox"
+                                  Width="180"
+                                  SelectionChanged="OnRepeatModeChanged">
+                            <ComboBoxItem Content="仅一次" />
+                            <ComboBoxItem Content="每天" />
+                            <ComboBoxItem Content="每周指定星期几" />
+                            <ComboBoxItem Content="每隔 N 天" />
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel x:Name="IntervalPanel"
+                                Orientation="Horizontal"
+                                Spacing="10">
+                        <TextBlock Text="间隔天数"
+                                   Width="100"
+                                   VerticalAlignment="Center" />
+                        <TextBox x:Name="IntervalDaysTextBox"
+                                 Width="100"
+                                 Watermark="1-365" />
+                    </StackPanel>
+
+                    <StackPanel x:Name="WeekdayPanel"
+                                Orientation="Horizontal"
+                                Spacing="10"
+                                IsVisible="False">
+                        <TextBlock Text="星期"
+                                   Width="100"
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="WeekdayComboBox"
+                                  Width="180">
+                            <ComboBoxItem Content="星期一" />
+                            <ComboBoxItem Content="星期二" />
+                            <ComboBoxItem Content="星期三" />
+                            <ComboBoxItem Content="星期四" />
+                            <ComboBoxItem Content="星期五" />
+                            <ComboBoxItem Content="星期六" />
+                            <ComboBoxItem Content="星期日" />
+                        </ComboBox>
+                    </StackPanel>
+
+                    <CheckBox x:Name="EnabledCheckBox"
+                              Content="启用此任务"
+                              IsChecked="True" />
+
+                    <TextBlock x:Name="ValidationText"
+                               Foreground="#FFD05A5A"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Spacing="8">
+                        <Button Content="取消"
+                                Click="OnCancelEditClick" />
+                        <Button Content="保存任务"
+                                Classes="accent"
+                                Click="OnSaveTaskClick" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="任务列表"
+                       FontSize="18"
+                       FontWeight="SemiBold" />
+            <TextBlock x:Name="EmptyHint"
+                       Text="暂无任务，点击上方按钮创建一个定时关机任务。"
+                       IsVisible="False"
+                       TextWrapping="Wrap" />
+
+            <ItemsControl x:Name="TaskItems">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,4"
+                                Padding="12"
+                                BorderBrush="#33808080"
+                                BorderThickness="1"
+                                CornerRadius="6">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                                <TextBlock Grid.Column="0"
+                                           Grid.Row="0"
+                                           Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="0"
+                                           Grid.Row="1"
+                                           Margin="0,4,0,0"
+                                           Text="{Binding TimeText}"
+                                           FontSize="15" />
+                                <TextBlock Grid.Column="0"
+                                           Grid.Row="2"
+                                           Margin="0,4,0,0"
+                                           Text="{Binding RepeatText}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Grid.Column="0"
+                                           Grid.Row="3"
+                                           Margin="0,4,0,0"
+                                           Text="{Binding NextRunText}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Grid.Column="0"
+                                           Grid.Row="4"
+                                           Margin="0,4,0,0"
+                                           Text="{Binding StatusText}"
+                                           TextWrapping="Wrap" />
+                                <StackPanel Grid.Column="1"
+                                            Grid.Row="0"
+                                            Grid.RowSpan="5"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Spacing="6">
+                                    <CheckBox IsChecked="{Binding IsEnabled, Mode=OneWay}"
+                                              Click="OnToggleTaskClick"
+                                              Content="启用" />
+                                    <Button Content="编辑"
+                                            Click="OnEditTaskClick" />
+                                    <Button Content="删除"
+                                            Click="OnDeleteTaskClick" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="注意：启用任务后，到达设定时间会立即执行 shutdown /s /t 0。请确认时间后再保存并启用。"
+                       Foreground="#FFD05A5A"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+    </ScrollViewer>
+</ci:SettingsPageBase>
