@@ -7,3 +7,7 @@ version: 1.0.0.0
 author: OpenCode
 icon: icon.png
 readme: README.md
+license: GPL-3.0
+repoOwner: BaiSi4014
+repoName: classisland-timeshutdown
+assetsRoot: main
